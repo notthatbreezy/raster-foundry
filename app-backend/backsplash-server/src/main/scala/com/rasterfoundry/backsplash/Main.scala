@@ -44,6 +44,9 @@ import com.rasterfoundry.database.util.RFTransactor
 
 object Main extends IOApp with HistogramStoreImplicits {
 
+  sgdal.setConfigOption("CPL_DEBUG", "ON")
+  sgdal.setConfigOption("GDAL_DISABLE_READDIR_ON_OPEN", "YES")
+
   val dbContextShift: ContextShift[IO] = IO.contextShift(
     ExecutionContext.fromExecutor(
       Executors.newFixedThreadPool(

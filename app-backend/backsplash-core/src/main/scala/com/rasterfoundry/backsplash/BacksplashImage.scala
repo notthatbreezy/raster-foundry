@@ -77,13 +77,14 @@ import scala.collection.mutable.HashMap
 
 object BacksplashImage extends RasterSourceUtils with LazyLogging {
 
-//  def getRasterSource(uri: String): GDALRasterSource = blocking {
-//    GDALRasterSource(URLDecoder.decode(uri, "UTF-8"))
-//  }
-
-  def getRasterSource(uri: String): GeoTiffRasterSource = {
-    new GeoTiffRasterSource(uri)
+  def getRasterSource(uri: String): GDALRasterSource = {
+    GDALRasterSource(URLDecoder.decode(uri, "UTF-8"))
   }
+
+
+//  def getRasterSource(uri: String): GeoTiffRasterSource = {
+//    new GeoTiffRasterSource(uri)
+//  }
 
 //  def fromWkt(imageId: UUID,
 //              uri: String,
