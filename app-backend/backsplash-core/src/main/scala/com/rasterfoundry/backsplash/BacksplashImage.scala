@@ -12,15 +12,13 @@ import geotrellis.raster.resample.NearestNeighbor
 import geotrellis.spark.SpatialKey
 import geotrellis.proj4.{LatLng, WebMercator}
 import geotrellis.server.vlm.RasterSourceUtils
-import geotrellis.contrib.vlm.geotiff.GeoTiffRasterSource
+import geotrellis.contrib.vlm.gdal.GDALRasterSource
 import cats.data.{NonEmptyList => NEL}
 import cats.effect.IO
 import io.circe.syntax._
 import java.util.UUID
 
 import com.typesafe.scalalogging.LazyLogging
-
-import geotrellis.contrib.vlm.gdal.GDALRasterSource
 
 case class BacksplashImage(imageId: UUID,
                            uri: String,
@@ -79,6 +77,6 @@ import scala.collection.mutable.HashMap
 
 object BacksplashImage extends RasterSourceUtils with LazyLogging {
 
-  def getRasterSource(uri: String): GeoTiffRasterSource =
-    new GeoTiffRasterSource(uri)
+  def getRasterSource(uri: String): GDALRasterSource =
+    new GDALRasterSource(uri)
 }
