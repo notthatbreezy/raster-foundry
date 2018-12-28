@@ -18,8 +18,8 @@ import cats.effect.IO
 import io.circe.syntax._
 import java.util.UUID
 
+import com.github.blemale.scaffeine.{Cache, Scaffeine}
 import com.typesafe.scalalogging.LazyLogging
-
 import geotrellis.contrib.vlm.gdal.GDALRasterSource
 
 case class BacksplashImage(imageId: UUID,
@@ -75,10 +75,22 @@ case class BacksplashImage(imageId: UUID,
     }
 }
 
-import scala.collection.mutable.HashMap
-
 object BacksplashImage extends RasterSourceUtils with LazyLogging {
 
-  def getRasterSource(uri: String): GeoTiffRasterSource =
-    new GeoTiffRasterSource(uri)
+  logger.debug(s"Cache Status: ${Config.cache.enable}")
+  logger.debug(s"Max Items in cache: ${Config.cache.maxNumberItems}")
+
+  val localCache: Cache[String, GeoTiffRasterSource] =
+    Scaffeine()
+      .maximumSize(Config.cache.maxNumberItems)
+      .build[String, GeoTiffRasterSource]()
+
+  def getRasterSource(uri: String): GeoTiffRasterSource = {
+    if (Config.cache.enable) {
+      logger.debug(s"Checking Cache for ${uri}")
+      localCache.get(uri, uri => new GeoTiffRasterSource(uri))
+    } else {
+      new GeoTiffRasterSource(uri)
+    }
+  }
 }
