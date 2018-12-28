@@ -80,17 +80,12 @@ object BacksplashImage extends RasterSourceUtils with LazyLogging {
   logger.debug(s"Cache Status: ${Config.cache.enable}")
   logger.debug(s"Max Items in cache: ${Config.cache.maxNumberItems}")
 
-  val localCache: Cache[String, GeoTiffRasterSource] =
+  val localCache: Cache[String, GDALRasterSource] =
     Scaffeine()
       .maximumSize(Config.cache.maxNumberItems)
-      .build[String, GeoTiffRasterSource]()
+      .build[String, GDALRasterSource]()
 
-  def getRasterSource(uri: String): GeoTiffRasterSource = {
-    if (Config.cache.enable) {
-      logger.debug(s"Checking Cache for ${uri}")
-      localCache.get(uri, uri => new GeoTiffRasterSource(uri))
-    } else {
-      new GeoTiffRasterSource(uri)
-    }
-  }
+  def getRasterSource(uri: String): GDALRasterSource =
+    GDALRasterSource(URLDecoder.decode(uri))
+
 }
