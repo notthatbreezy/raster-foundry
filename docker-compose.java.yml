@@ -130,6 +130,7 @@ services:
       - BLAZE_CONNECTOR_POOL_SIZE=32
       - POSTGRES_DB_POOL_SIZE=32
       - HIKARI_CONNECTION_THREADS=8
+      - BACKSPLASH_CACHE_ENABLED=false
     ports:
       - "8080:8080"
       - "9030:9030"

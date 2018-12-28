@@ -25,7 +25,11 @@ class ForeignErrorHandler[F[_], E <: Throwable, U](implicit M: MonadError[F, E])
     case (err: IllegalArgumentException) =>
       throw RequirementFailedException(err.getMessage)
     case (err: BacksplashException) => throw err
-    case t                          => throw UnknownException(t.getMessage)
+    case t =>
+      throw {
+        logger.error(t.getStackTraceString)
+        UnknownException(t.getMessage)
+      }
   }
 
   override def handle(service: AuthedService[U, F]): AuthedService[U, F] =

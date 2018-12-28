@@ -18,7 +18,7 @@ import cats.effect.IO
 import io.circe.syntax._
 import java.util.UUID
 
-import com.github.blemale.scaffeine.{Cache, Scaffeine}
+import com.github.blemale.scaffeine.{Cache, LoadingCache, Scaffeine}
 import com.typesafe.scalalogging.LazyLogging
 import geotrellis.contrib.vlm.gdal.GDALRasterSource
 
