@@ -74,13 +74,11 @@ class MosaicImplicits[HistStore: HistogramStore](mtr: MetricsRegistrator,
     def tmsReification(self: BacksplashMosaic, buffer: Int)(
         implicit contextShift: ContextShift[IO]
     ): (Int, Int, Int) => IO[Literal] = (z: Int, x: Int, y: Int) => {
-      val filtered = BacksplashMosaic.filterRelevant(self)
       val extent = BacksplashImage.tmsLevels(z).mapTransform.keyToExtent(x, y)
       val mosaic = {
         val mbtIO = (BacksplashMosaic.filterRelevant(self) map { relevant =>
           logger.debug(s"Band Subset Required: ${relevant.subsetBands}")
           val img = relevant.read(z, x, y)
-          img.map(i => logger.debug(s"Band Count Available: ${i.bandCount}"))
           img
         }).collect({ case Some(mbtile) => mbtile }).compile.toList
         mbtIO.map(_.reduceOption(_ merge _) match {
